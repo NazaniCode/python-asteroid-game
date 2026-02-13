@@ -1,13 +1,14 @@
 from multiprocessing.spawn import import_main_path
 import pygame
 import asteroidfield
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from constants import SCORE_POSITION_X, SCORE_POSITION_Y, SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state, log_event
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 import sys
+from score import Score
 
 
 def main():
@@ -29,9 +30,11 @@ Screen height: {SCREEN_HEIGHT}
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
+    Score.containers = drawable
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroidfield = AsteroidField()
+    score = Score(SCORE_POSITION_X, SCORE_POSITION_Y, 0)
 
     clock = pygame.time.Clock()
     dt = 0
@@ -53,7 +56,7 @@ Screen height: {SCREEN_HEIGHT}
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
                     shot.kill()
-                    asteroid.split()
+                    asteroid.split(score)
         for d in drawable:
             d.draw(screen)
 
