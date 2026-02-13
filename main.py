@@ -8,7 +8,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 import sys
-from score import Score
+from ui import UI
 
 
 def main():
@@ -30,11 +30,11 @@ Screen height: {SCREEN_HEIGHT}
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
-    Score.containers = drawable
+    UI.containers = drawable
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroidfield = AsteroidField()
-    score = Score(SCORE_POSITION_X, SCORE_POSITION_Y, 0)
+    ui = UI(SCORE_POSITION_X, SCORE_POSITION_Y, 0, player)
 
     clock = pygame.time.Clock()
     dt = 0
@@ -49,14 +49,13 @@ Screen height: {SCREEN_HEIGHT}
             u.update(dt)
         for asteroid in asteroids:
             if asteroid.collides_with(player):
-                log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+                if player.is_invincible == False:
+                    player.die()
             for shot in shots:
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
                     shot.kill()
-                    asteroid.split(score)
+                    asteroid.split(ui)
         for d in drawable:
             d.draw(screen)
 

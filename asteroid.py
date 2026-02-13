@@ -16,16 +16,16 @@ class Asteroid(CircleShape):
         movement_vector = self.velocity * dt
         self.position += movement_vector
 
-    def split(self, score):
+    def split(self, UI):
         self.kill()
         if self.radius == ASTEROID_MIN_RADIUS:
-            score.points += 25
+            UI.points += 25
             return
         else:
             if self.radius == 2 * ASTEROID_MIN_RADIUS:
-                score.points += 50
+                UI.points += 50
             elif self.radius == 3 * ASTEROID_MIN_RADIUS:
-                score.points += 100
+                UI.points += 100
             log_event("asteroid_split")
             random_angle = random.uniform(20, 50)
             first_asteroid_velocity = self.velocity.rotate(random_angle)
